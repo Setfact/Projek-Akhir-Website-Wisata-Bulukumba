@@ -16,6 +16,16 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (Auth::check()) {
+            \Illuminate\Support\Facades\Log::info('Admin Access Attempt', [
+                'user_id' => Auth::id(),
+                'role' => Auth::user()->role,
+                'email' => Auth::user()->email
+            ]);
+        } else {
+            \Illuminate\Support\Facades\Log::info('Admin Access Attempt: User not authenticated');
+        }
+
         if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request);
         }
