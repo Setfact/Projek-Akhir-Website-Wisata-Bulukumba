@@ -2,16 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany; // Pakai HasMany
 
 class Destination extends Model
 {
-    protected $fillable = ['name', 'slug', 'description', 'location', 'price', 'image_url', 'promoted'];
+    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
 
-    // Gunakan hasMany karena di tabel reviews kita pakai 'destination_id'
-    public function reviews(): HasMany
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'location',
+        'price',
+        'image_url',
+        'gallery',
+        'map_url',
+        'promoted',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
+        'promoted' => 'boolean',
+    ];
+
+    public function reviews()
     {
-        return $this->hasMany(Review::class)->latest();
+        return $this->hasMany(Review::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

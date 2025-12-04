@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        \Illuminate\Support\Facades\Mail::to($user)->send(new \App\Mail\RegistrationSuccess($user));
+
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));

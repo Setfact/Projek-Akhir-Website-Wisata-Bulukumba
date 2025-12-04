@@ -19,6 +19,8 @@ public function up(): void
         $table->string('location'); // Contoh: Tanjung Bira
         $table->decimal('price', 12, 2); // Harga tiket
         $table->string('image_url')->nullable();
+        $table->json('gallery')->nullable(); // Foto galeri
+        $table->text('map_url')->nullable(); // Link Google Maps
         $table->boolean('promoted')->default(false);
         $table->timestamps();
     });

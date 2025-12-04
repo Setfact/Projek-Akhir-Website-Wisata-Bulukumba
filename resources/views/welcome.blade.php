@@ -1,105 +1,141 @@
 <x-app-layout>
+    @push('meta')
+        <meta name="description" content="Phinisi Point - Portal Wisata Terbaik di Bulukumba. Temukan destinasi indah, penginapan nyaman, dan event menarik.">
+        <meta name="keywords" content="wisata bulukumba, phinisi point, pantai bira, tanjung bira, hotel bulukumba">
+    @endpush
     <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="hero-overlay text-center">
-            <div>
-                <h1 class="display-3 fw-bold text-white mb-3" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.6);">
-                    Liburan Impian di Bulukumba
-                </h1>
-                <p class="lead text-white fs-4 mb-4" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);">
-                    Surga Tersembunyi di Sulawesi Selatan
+    <!-- Hero Section -->
+    <div class="relative h-[600px]">
+        <div class="absolute inset-0">
+            <img class="w-full h-full object-cover" src="{{ asset('images/hero-bg.jpg') }}" alt="Keindahan Bulukumba">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Jelajahi Keindahan Bulukumba
+            </h1>
+            <p class="mt-6 text-xl text-blue-100 max-w-3xl">
+                Temukan surga tersembunyi, pantai pasir putih, dan budaya maritim yang memukau di Phinisi Point.
+            </p>
+            <div class="mt-10">
+                <a href="{{ route('destinations.index') }}" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 md:py-4 md:text-lg md:px-10">
+                    Mulai Petualangan
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Destinations -->
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Destinasi Populer
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                    Kunjungi tempat-tempat wisata terbaik yang wajib masuk dalam daftar perjalanan Anda.
                 </p>
             </div>
-        </div>
-    </div>
 
-    <!-- Search Box (Visual Only) -->
-    <div class="container" style="margin-top: -40px; position: relative; z-index: 10;">
-        <div class="card shadow border-0 p-4 rounded-3">
-            <div class="row g-2">
-                <div class="col-md-10">
-                    <input type="text" class="form-control form-control-lg border-0 bg-light" placeholder="Cari Destinasi...">
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary btn-lg w-100 fw-bold">Cari</button>
-                </div>
+            <div class="mt-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($destinations as $destination)
+                    <div class="group relative bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <div class="aspect-w-3 aspect-h-2 bg-gray-200 group-hover:opacity-75">
+                            <img src="{{ $destination->image_url ? Storage::url($destination->image_url) : 'https://via.placeholder.com/400x300' }}" alt="{{ $destination->name }}" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                <a href="{{ route('destinations.show', $destination->slug) }}">
+                                    <span aria-hidden="true" class="absolute inset-0"></span>
+                                    {{ $destination->name }}
+                                </a>
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-500 truncate">{{ $destination->location }}</p>
+                            <p class="mt-2 text-base font-semibold text-blue-600">Rp {{ number_format($destination->price, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            <div class="mt-10 text-center">
+                <a href="{{ route('destinations.index') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Lihat Semua Destinasi &rarr;
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- 1. BAGIAN DESTINASI POPULER -->
-    <div class="container my-5 pt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold text-primary">Destinasi Populer</h2>
-        </div>
-        
-        <div class="row">
-            @foreach($destinations as $dest)
-            <div class="col-12 col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow text-white overflow-hidden">
-                    {{-- Gambar Destinasi --}}
-                    <img src="{{ $dest->image_url ? asset('storage/'.$dest->image_url) : 'https://placehold.co/600x400?text='.urlencode($dest->name) }}" 
-                         class="card-img w-100 h-100" 
-                         style="object-fit: cover; height: 300px;" 
-                         alt="{{ $dest->name }}">
+    <!-- Accommodations Section -->
+    <div class="bg-gray-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Penginapan Nyaman
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                    Istirahat dengan tenang di hotel dan homestay terbaik sekitar lokasi wisata.
+                </p>
+            </div>
 
-                    {{-- Overlay Teks --}}
-                    <div class="card-img-overlay d-flex flex-column justify-content-end p-4" 
-                         style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
-                        
-                        <h4 class="card-title fw-bold mb-0">{{ $dest->name }}</h4>
-                        <p class="small text-warning mb-3"><i class="fas fa-map-marker-alt me-1"></i> {{ $dest->location }}</p>
-                        
-                        <div>
-                            <a href="{{ route('destinations.show', $dest->slug) }}" class="btn btn-sm btn-light fw-bold text-primary">
-                                Lihat Detail
-                            </a>
+            <div class="mt-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($hotels as $hotel)
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <img src="{{ $hotel->image_url ? Storage::url($hotel->image_url) : 'https://via.placeholder.com/400x300' }}" alt="{{ $hotel->name }}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-900">{{ $hotel->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $hotel->location }}</p>
+                            <div class="mt-4 flex justify-between items-center">
+                                <span class="text-blue-600 font-bold">Rp {{ number_format($hotel->price_per_night, 0, ',', '.') }} / malam</span>
+                                <a href="{{ route('accommodations.show', $hotel->slug) }}" class="text-sm text-blue-500 hover:underline">Lihat Detail</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-            @endforeach
+             <div class="mt-10 text-center">
+                <a href="{{ route('accommodations.index') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Lihat Semua Penginapan &rarr;
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- 2. BAGIAN PENGINAPAN PILIHAN -->
-    <div class="container my-5 pb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold text-primary">Penginapan Pilihan</h2>
-            <a href="{{ route('hotels.index') }}" class="btn btn-outline-primary rounded-pill px-4">Lihat Semua</a>
-        </div>
-        
-        <div class="row">
-            @foreach($hotels as $hotel)
-            <div class="col-12 col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm overflow-hidden">
-                    {{-- Gambar Hotel --}}
-                    <div class="position-relative" style="height: 250px;">
-                        <img src="{{ $hotel->image_url ? asset('storage/'.$hotel->image_url) : 'https://placehold.co/600x400?text='.urlencode($hotel->name) }}" 
-                             class="w-100 h-100" 
-                             style="object-fit: cover;" 
-                             alt="{{ $hotel->name }}">
-                        <div class="position-absolute bottom-0 start-0 bg-primary text-white px-3 py-1 rounded-end mb-3">
-                            Rp {{ number_format($hotel->price_per_night, 0, ',', '.') }} /malam
-                        </div>
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ $hotel->name }}</h5>
-                        <p class="text-muted small mb-2"><i class="fas fa-map-marker-alt text-danger me-1"></i> {{ $hotel->location }}</p>
-                        <p class="card-text text-secondary small">{{ Str::limit($hotel->description, 80) }}</p>
-                        
-                        <div class="d-grid mt-3">
-                            <a href="https://wa.me/6285792881853?text=Halo%20Admin,%20info%20kamar%20{{ urlencode($hotel->name) }}" 
-                               target="_blank" 
-                               class="btn btn-outline-success btn-sm rounded-pill fw-bold">
-                                <i class="fab fa-whatsapp me-1"></i> Pesan via WA
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <!-- Blog Section -->
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Artikel & Tips Wisata
+                </h2>
             </div>
-            @endforeach
+            <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-3">
+                @foreach($articles as $article)
+                    <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                        <div class="flex-shrink-0">
+                            <img class="h-48 w-full object-cover" src="{{ $article->image_url ? Storage::url($article->image_url) : 'https://via.placeholder.com/400x300' }}" alt="{{ $article->title }}">
+                        </div>
+                        <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-blue-600">
+                                    {{ $article->category }}
+                                </p>
+                                <a href="{{ route('blogs.show', $article->slug) }}" class="block mt-2">
+                                    <p class="text-xl font-semibold text-gray-900">{{ $article->title }}</p>
+                                    <p class="mt-3 text-base text-gray-500 line-clamp-3">
+                                        {{ Str::limit(strip_tags($article->content), 100) }}
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+             <div class="mt-10 text-center">
+                <a href="{{ route('blogs.index') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Baca Artikel Lainnya &rarr;
+                </a>
+            </div>
         </div>
     </div>
 </x-app-layout>

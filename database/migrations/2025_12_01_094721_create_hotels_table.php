@@ -18,6 +18,8 @@ public function up(): void
         $table->text('description');
         $table->string('location');
         $table->decimal('price_per_night', 12, 2);
+        $table->text('facilities')->nullable(); // Fasilitas
+        $table->text('map_url')->nullable(); // Link Google Maps
         $table->string('image_url')->nullable();
         $table->timestamps();
     });

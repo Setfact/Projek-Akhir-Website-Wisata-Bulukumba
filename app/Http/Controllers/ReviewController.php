@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    // Simpan Review Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -17,6 +16,16 @@ class ReviewController extends Controller
             'comment' => 'required|string|max:500',
         ]);
 
+        // Check if user has purchased a ticket for this destination
+        $hasPurchased = Auth::user()->orders()
+            ->where('destination_id', $request->destination_id)
+            ->where('status', 'paid')
+            ->exists();
+
+        if (!$hasPurchased) {
+            return back()->with('error', 'Anda harus membeli tiket terlebih dahulu untuk memberikan review.');
+        }
+
         Review::create([
             'user_id' => Auth::id(),
             'destination_id' => $request->destination_id,
@@ -24,44 +33,28 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return back()->with('success', 'Ulasan berhasil dikirim!');
+        return back()->with('success', 'Review berhasil ditambahkan.');
     }
 
-    // Update Review (Edit)
     public function update(Request $request, $id)
     {
-        $review = Review::findOrFail($id);
-
-        // Pastikan yang edit adalah pemilik review
-        if (Auth::id() !== $review->user_id) {
-            return back()->with('error', 'Anda tidak berhak mengedit ulasan ini.');
-        }
+        $review = Review::where('user_id', Auth::id())->findOrFail($id);
 
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:500',
         ]);
 
-        $review->update([
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]);
+        $review->update($request->only('rating', 'comment'));
 
-        return back()->with('success', 'Ulasan berhasil diperbarui!');
+        return back()->with('success', 'Review berhasil diperbarui.');
     }
 
-    // Hapus Review
     public function destroy($id)
     {
-        $review = Review::findOrFail($id);
-
-        // Pastikan yang hapus adalah pemilik review
-        if (Auth::id() !== $review->user_id) {
-            return back()->with('error', 'Anda tidak berhak menghapus ulasan ini.');
-        }
-
+        $review = Review::where('user_id', Auth::id())->findOrFail($id);
         $review->delete();
 
-        return back()->with('success', 'Ulasan berhasil dihapus.');
+        return back()->with('success', 'Review berhasil dihapus.');
     }
 }

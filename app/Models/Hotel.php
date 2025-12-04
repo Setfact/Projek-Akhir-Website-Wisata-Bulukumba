@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Hotel extends Model
 {
-    use HasFactory;
+    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
 
-    // Kita daftarkan kolom apa saja yang boleh diisi
     protected $fillable = [
         'name',
         'slug',
         'description',
         'location',
         'price_per_night',
+        'facilities',
+        'map_url',
         'image_url',
     ];
 }

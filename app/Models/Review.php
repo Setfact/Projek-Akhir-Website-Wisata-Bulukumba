@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    protected $fillable = ['user_id', 'destination_id', 'rating', 'comment'];
+    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
+
+    protected $fillable = [
+        'user_id',
+        'destination_id',
+        'rating',
+        'comment',
+    ];
 
     public function user()
     {
